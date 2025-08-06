@@ -1,0 +1,83 @@
+#!/bin/sh
+
+WALLPAPER_DIR="$HOME/Pictures/walls/best"
+CURRENT_WALLPAPER="$(cat "$HOME/.cache/wal/wal")"
+
+is_image() {
+    local file_extension="${1##*.}"
+    case "$file_extension" in
+        jpg|jpeg|png|gif|webp) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+get_random_wallpaper() {
+    local random_wall
+    while true; do
+        random_wall=$(find "$HOME/Pictures/walls/" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.gif" -o -iname "*.webp" \) | shuf -n 1)
+        if [ "$random_wall" != "$CURRENT_WALLPAPER" ]; then
+            echo "$random_wall"
+            break
+        fi
+    done
+}
+
+if [ -n "$1" ]; then
+    if [ "$1" = "random" ]; then
+        WALL=$(get_random_wallpaper)
+    elif [ "$1" = "delete" ]; then
+        notify-send --app-name=Wallpaper --expire-time=2000 --icon="$CURRENT_WALLPAPER" "Wallpaper" "$CURRENT_WALLPAPER deleted !" 
+	rm "$CURRENT_WALLPAPER"
+        WALL=$(get_random_wallpaper)
+    elif [ ! -f "$1" ]; then
+        notify-send "Wallpaper file '$1' not found!"
+	exit 1
+    else
+	WALL="$(realpath "$1")"
+    fi
+    echo "$WALL"
+else
+    WALL="$(echo -e "#Random\n$(ls "$WALLPAPER_DIR")\n#Delete" | rofi -dmenu -replace -p " ")"
+    if [ -n "$WALL" ]; then
+	case "$WALL" in
+        "#Random")
+            WALL=$(get_random_wallpaper)
+            ;;
+	"#Delete")
+            notify-send --app-name=Wallpaper --expire-time=2000 --icon="$CURRENT_WALLPAPER" "Wallpaper" "$CURRENT_WALLPAPER deleted !" 
+	    rm "$CURRENT_WALLPAPER"
+            WALL=$(get_random_wallpaper)
+	    ;;
+        *)
+            WALL="$WALLPAPER_DIR/$WALL"
+            ;;
+        esac
+        echo "$WALL"
+    else
+        echo "No wallpaper selected :( "
+        exit 1
+    fi
+fi
+
+wal -q -n -i "$WALL" > /dev/null 2>&1 || notify-send "Couldn't apply theme" &&
+
+swww img "$WALL" \
+    --transition-fps 60 \
+    --transition-step 60 \
+    --transition-angle 90 \
+    --transition-type wave \
+    --transition-wave 50,60 \
+    --transition-duration 3.0 \
+    --transition-bezier 0.05,0.7,0.95,0.7
+
+{
+    hyprctl reload
+    bash ~/.config/waybar/scripts/reload-waybar.sh || echo "Failed to reload waybar"
+    walogram -s
+    # pywalfox update
+    sed -i "1s|$wall = .*|$wall = $WALL|" "$HOME/.config/hypr/hyprlock.conf" || notify-send "hyprlock failed"
+    notify-send --app-name=Wallpaper --expire-time=2000 --icon="$WALL" "Wallpaper" "New wallpaper applied!" 
+} > /dev/null
+
+wait
+exit 0

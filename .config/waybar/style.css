@@ -1,0 +1,71 @@
+@import "../../.cache/wal/colors-waybar.css";
+
+* {
+	font-family: Space Mono;
+	font-size: 11px;
+	font-weight: bold;
+/*	border-radius: 6px; */
+}
+
+window#waybar {
+	color: @foreground;
+	background-color: @background;
+	transition-property: background-color;
+	transition-duration: .5s;
+}
+tooltip {
+	background: @background;
+}
+tooltip label {
+	font-size: 9px;
+	color: @foreground;
+}
+
+#clock,
+#cpu,
+#memory,
+#mpris,
+#network,
+#temperature,
+#tray,
+#privacy,
+#pulseaudio,
+#custom-hyprsunset,
+#custom-hyprsunset_gamma,
+#custom-powermenu,
+#custom-util_dnd,
+#custom-util_hyprpicker,
+#custom-wall {
+	padding: 0 2px 0 2px;
+	color: @color3;
+}
+
+#custom-spacer_bar {
+	padding: 0;
+	color: alpha(@foreground, 0.3);
+}
+
+#custom-menu_right,
+#custom-os_logo {
+	padding: 0 6px 0 6px;
+	font-size: 15px;
+	color: @color1;
+}
+
+#workspaces {
+    	padding: 0;
+}
+#workspaces button {
+	padding: 0;
+    	background-color: transparent;
+    	color: @color3;
+}
+#workspaces button.active {
+    	color: @color1;
+}
+
+#taskbar,
+#taskbar button {
+	padding: 0 2px 0 2px;
+}
+

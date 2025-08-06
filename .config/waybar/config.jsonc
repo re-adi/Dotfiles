@@ -1,0 +1,231 @@
+{
+	// BAR CONFIG
+
+	"name" : "bar0",
+	"output": ["VGA-1"],
+
+	"position": "top",
+	"height": 24,
+	// "width": 1200,
+	// "margin": "6 6 0 6",
+
+	"include": [],
+	"layer": "bottom",
+	"mode": "dock",
+	"ipc": false,
+	"exclusive": true,
+	"passthrough": false,
+	"start_hidden": false,
+	"fixed-center": true,
+	"reload_style_on_change": false,
+	"spacing": 4,
+	"modules-left": 
+	[
+		"custom/os_logo",
+		"tray",
+		"custom/space",
+		"clock",
+		"custom/spacer_bar",
+		"hyprland/workspaces"
+	],
+	"modules-center":
+	[
+		"mpris"
+	],
+	"modules-right": 
+	[
+		"network",
+		"cpu",
+		// "temperature",
+		"memory",
+		"pulseaudio",
+		// "custom/spacer_bar",
+		// "wlr/taskbar",
+		"custom/space",
+		"privacy",
+		"group/right"
+	],
+
+
+	// CORE MODULES
+
+	"clock": {
+		"format": "{:%a %d, %b, %H:%M}",
+		// "format-alt": "{:%a %d, %b}",
+		"tooltip": false
+	},
+
+	"cpu": {
+	  	"format": "{usage}%",
+        	"interval": 2,
+		"tooltip": false
+	},
+
+	"hyprland/workspaces": {
+        	"format": "{icon}",
+		"active-only": false,
+		"show-special": true,
+		"special-visible-only": false,
+        	"on-scroll-up": "hyprctl dispatch workspace e-1",
+        	"on-scroll-down": "hyprctl dispatch workspace e+1",
+        	"format-icons": {"active":"","urgent":"","scratchpad":"","default":""},
+        	"persistent-workspaces": {"1": [],"2": [],"3": [],"4": [],"5": []}
+    	},
+
+	"memory": {
+		"interval": 5,
+		"format": "{used:0.1f}G",
+		//"tooltip-format": "{swapPercentage}% swap used"
+		"tooltip": false
+	},
+
+	"mpris": {
+		"format": "{status_icon} {dynamic}",
+		"dynamic-order": [ "artist","title" ],
+		"dynamic-importance-order": [ "title","artist" ],
+		"dynamic-len": 60,
+		"status-icons": {
+			"playing": "",
+			"paused": ""
+			},
+		"on-scroll-up": "playerctl position 10+",
+		"on-scroll-down": "playerctl position 10-",
+		"tooltip": false
+	},
+
+	"network": {
+		"interval": 2,
+		"format": "{bandwidthTotalBytes}",
+		"on-click": "kitty -e nmtui",
+		"tooltip": false
+	},
+
+	"privacy": {
+        	"icon-size": 10,
+        	"icon-spacing": 8,
+        	"transition-duration": 200,
+        	"modules": [
+        		{
+          			"type": "screenshare",
+          			"tooltip": true
+        		},
+        		{
+          			"type": "audio-in",
+          			"tooltip": true
+        		}
+      		]
+    	},
+
+	"pulseaudio": {
+		"tooltip": false,
+		"scroll-step": 5,
+		"format": "{volume}󰽴",
+		"format-muted": "0󰽳",
+		"on-click":"wpctl set-mute @DEFAULT_SINK@ toggle"
+	},
+
+	"temperature": {
+        	"critical-threshold": 70,
+        	"format": "{temperatureC}C",
+        	"tooltip": false
+    	},
+
+	"tray": {
+        	"icon-theme": "Fluent Dark",
+        	"icon-size": 10,
+        	"spacing": 4
+    	},
+
+	"wlr/taskbar": {
+    		"format": "{icon}",
+		"icon-theme": "Fluent Dark",
+    		"icon-size": 12,
+		"tooltip": true,
+    		"tooltip-format": "{title}",
+    		"sort-by-app-id": false,
+    		"on-click": "activate",
+    		"on-click-middle": "close",
+        	"all-outputs": true,
+        	"ignore-list": ["kitty","Ghostty","Terminal"]
+  	},
+
+	// CUSTOM MODULES
+
+	"custom/space": {
+		"format": "	",
+		"tooltip": false
+	},
+
+	"custom/spacer_bar": {
+		"format": "|",
+		"tooltip": false
+	},
+
+	"custom/menu_right": {
+		"format": "",
+		"tooltip": false
+	},
+
+	"custom/os_logo": {
+		"format": "󰣇",
+		"on-click": "hyprctl dispatch -- exec fuzzel",
+        	"on-click-right": "scratchpad -l -g -m 'fuzzel -d'",
+		"tooltip": false
+	},
+
+	"custom/hyprsunset": {
+		"format": "",
+		"on-click": "~/.config/waybar/scripts/hyprsunset.sh reset",
+		"on-click-right": "pkill hyprsunset",
+		"on-scroll-up": "~/.config/waybar/scripts/hyprsunset.sh temperature +200",
+		"on-scroll-down": "~/.config/waybar/scripts/hyprsunset.sh temperature -200",
+		"tooltip-format": "Temperature"
+	},
+
+	"custom/hyprsunset_gamma": {
+		"format": "󰃝",
+		"on-click": "~/.config/waybar/scripts/hyprsunset.sh reset",
+		"on-click-right": "pkill hyprsunset",
+		"on-scroll-up": "~/.config/waybar/scripts/hyprsunset.sh gamma +5",
+		"on-scroll-down": "~/.config/waybar/scripts/hyprsunset.sh gamma -5",
+		"tooltip-format": "Gamma"
+	},
+
+	"custom/util_dnd": {
+		"format": "{}",
+		"interval": "once",
+        	"exec": "if [[ \"$(dunstctl is-paused)\" == \"false\" ]]; then echo ''; else echo ''; fi",
+        	"on-click": "dunstctl set-paused toggle; pkill -SIGRTMIN+1 waybar",
+        	"on-click-right": "kitty -e ~/.config/waybar/scripts/dunst-history.sh",
+        	"signal": 1,
+		"tooltip-format": "DND"
+	},
+
+	"custom/wall": {
+		"format": "󰋸",
+        	"on-click": "hyprctl dispatch exec wallcoffee",
+		"on-click-right": "hyprctl dispatch -- exec wallcoffee random",
+        	"tooltip-format": "wallpaper"
+    	},
+
+	"custom/util_hyprpicker": {
+		"format": "",
+		"on-click": "hyprpicker --no-fractional --no-fancy --quiet --autocopy",
+		"tooltip-format": "color picker"
+	},
+	
+	"custom/powermenu": {
+		"format": "󰿅 ",
+		"on-click": "~/.config/waybar/scripts/powermenu.sh",
+		"tooltip-format": "powermenu"
+	},
+
+	"group/right": {
+        	"orientation": "inherit",
+        	"drawer": {
+            		"transition-duration": 500,
+            		"transition-left-to-right": true
+        	},
+        	"modules": ["custom/menu_right","custom/hyprsunset_gamma","custom/hyprsunset","custom/wall","custom/util_hyprpicker","custom/util_dnd","custom/powermenu"]
+	}
+}

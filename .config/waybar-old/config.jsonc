@@ -1,0 +1,257 @@
+{
+
+// BAR-CONFIGS
+
+	"mode": "dock",
+	"exclusive": "true",
+	"layer": "top",
+	"position": "top",
+	"height": 24,
+	"margin": "5px 8px -5px 8px",
+	"fixed-center": "false",
+    	"spacing": 6,
+	"modules-left": 
+	["custom/os_button","clock","group/left","hyprland/workspaces"],
+	"modules-center":
+	["custom/now_playing_artist","custom/now_playing"],
+	"modules-right":
+	["pulseaudio","temperature","cpu","custom/mem","privacy","group/right","custom/network_monitor","custom/wall"],
+
+// MODULES
+
+	"clock": {
+		"format-alt": "{:%d/%m/%Y}",
+		"tooltip-format": "<tt><small>{calendar}</small></tt>",
+		"calendar": {
+			"mode"          : "month",
+			"mode-mon-col"  : 3,
+                    	"on-scroll"     : 1,
+                    	"format": {
+				"months":     "<span color='#ffead3'><b>{}</b></span>",
+                              	"days"  :     "<span color='#ecc6d9'><b>{}</b></span>",
+                              	"weeks" :     "<span color='#99ffdd'><b>W{}</b></span>",
+                              	"weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
+                              	"today" :     "<span color='#ff6699'><b><u>{}</u></b></span>"
+			}
+		},
+		"actions":  {
+			"on-click-right": "mode",
+                    	"on-scroll-up": "tz_up",
+                    	"on-scroll-down": "tz_down",
+                    	"on-scroll-up": "shift_up",
+                    	"on-scroll-down": "shift_down"
+		}
+	},
+
+	"cpu": {
+	  	"format": "{usage}%",
+        	"interval": 1
+	},
+
+	"custom/mem": {
+		"format": "{}MB",
+        	"interval": 3,
+        	"exec": "free -m | awk '/Mem:/ {printf \"%d\", $3}'",
+        	"tooltip": false
+	},
+
+	"custom/network_monitor": {
+		"format": "{}",
+		"exec": "~/.config/waybar/scripts/network_monitor.sh",
+        	"on-click": "kitty -e nmtui",
+        	"on-click-right": "killall network_monitor.sh",
+        	"tooltip": false
+	},
+
+	"custom/os_button": {
+        	"format": "󰣇",
+        	"on-click": "hyprctl dispatch -- exec fuzzel",
+        	"on-click-right": "scratchpad -l -g -m 'fuzzel -d'",
+        	"tooltip": false
+    	},
+
+	"custom/wall": {
+		"format": "",
+        	"on-click": "hyprctl dispatch exec wallcoffee",
+		"on-click-right": "hyprctl dispatch -- exec wallcoffee random",
+        	"tooltip": false
+    	},
+
+	"hyprland/workspaces": {
+        	"format": "{icon}",
+		"show-special": true,
+        	"on-scroll-up": "hyprctl dispatch workspace e-1",
+        	"on-scroll-down": "hyprctl dispatch workspace e+1",
+        	"format-icons": {"active":" ","urgent":" ","scratchpad":"󰸶 ","default":""},
+        	"persistent-workspaces": {"1": [],"2": [],"3": [],"4": [],"4": [],"5": [],"6": []}
+    	},
+
+	"privacy": {
+        	"icon-size": 10,
+        	"icon-spacing": 6,
+        	"transition-duration": 200,
+        	"modules": [
+        		{
+          			"type": "screenshare",
+          			"tooltip": true
+        		},
+        		{
+          			"type": "audio-in",
+          			"tooltip": true
+        		}	
+      		]
+    	},
+
+	"pulseaudio": {
+		"tooltip": false,
+		"scroll-step": 5,
+		"format": "  {volume}󰎇",
+		"format-muted": "  0󰎊",
+		"on-click":"wpctl set-mute @DEFAULT_SINK@ toggle"
+	},
+
+	"temperature": {
+        	"critical-threshold": 70,
+        	"format": "{temperatureC}°C",
+        	"tooltip": false
+    	},
+
+	"tray": {
+        	"icon-theme": "Fluent Dark",
+        	"icon-size": 10,
+        	"spacing": 8
+    	},
+
+	"wlr/taskbar": {
+    		"format": "{icon}",
+		"icon-theme": "Fluent Dark",
+    		"icon-size": 10,
+		"tooltip": true,
+    		"tooltip-format": "{title}",
+    		"sort-by-app-id": false,
+    		"on-click": "activate",
+    		"on-click-middle": "close",
+        	"all-outputs": true,
+        	"ignore-list": ["kitty"]
+  	},
+
+
+// GROUPS
+
+
+    	"custom/menu_left": {
+        	"format": "",
+        	"tooltip": false
+    	},
+
+    	"custom/menu_right": {
+        	"format": "",
+        	"tooltip": false
+    	},
+	
+	"custom/hyprsunset": {
+		"format": "",
+		"on-click": "~/.config/waybar/scripts/hyprsunset.sh reset",
+		"on-click-right": "pkill hyprsunset",
+		"on-scroll-up": "~/.config/waybar/scripts/hyprsunset.sh temperature +200",
+		"on-scroll-down": "~/.config/waybar/scripts/hyprsunset.sh temperature -200",
+		"tooltip-format": "Temperature"
+	},
+
+	"custom/hyprsunset_gamma": {
+		"format": "󰃝",
+		"on-click": "~/.config/waybar/scripts/hyprsunset.sh reset",
+		"on-click-right": "pkill hyprsunset",
+		"on-scroll-up": "~/.config/waybar/scripts/hyprsunset.sh gamma +5",
+		"on-scroll-down": "~/.config/waybar/scripts/hyprsunset.sh gamma -5",
+		"tooltip-format": "Gamma"
+	},
+
+	"custom/powermenu": {
+		"format": "󰿅",
+		"on-click": "~/.config/waybar/scripts/powermenu.sh",
+		"tooltip-format": "powermenu"
+	},
+
+	"custom/now_playing": {
+		"format": "{}",
+		"exec": "~/.config/waybar/scripts/playerctl/now_playing.sh",
+        	"on-click": "playerctl play-pause",
+		"on-click-right": "playerctl stop",
+		"on-scroll-up": "playerctl position 10+",
+		"on-scroll-down": "playerctl position 10-",
+        	"tooltip": false
+	},
+
+	"custom/now_playing_artist": {
+		"format": "{}",
+		"exec": "~/.config/waybar/scripts/playerctl/now_playing_artist.sh",
+        	"on-click": "playerctl previous",
+		"on-click-right": "playerctl next",
+        	"tooltip": false
+	},
+
+	"custom/playerctl_prev": {
+		"format": "󰒮",
+        	"on-click": "playerctl previous",
+        	"tooltip": false
+	},
+
+	"custom/playerctl_pause": {
+        	"format": "{}",
+		"interval": "once",
+        	"exec": "if [[ \"$(playerctl status)\" == \"Playing\" ]]; then echo ''; else echo ''; fi",
+        	"on-click": "playerctl play-pause; pkill -SIGRTMIN+1 waybar",
+        	"signal": 1,
+        	"tooltip": false
+    	},
+
+    	"custom/playerctl_next": {
+        	"format": "󰒭",
+        	"on-click": "playerctl next",
+        	"tooltip": false
+    	},
+
+	"custom/util_dnd": {
+		"format": "{}",
+		"interval": "once",
+        	"exec": "if [[ \"$(dunstctl is-paused)\" == \"false\" ]]; then echo ''; else echo ''; fi",
+        	"on-click": "dunstctl set-paused toggle; pkill -SIGRTMIN+1 waybar",
+        	"on-click-right": "kitty -e ~/.config/waybar/scripts/dunst-history.sh",
+        	"signal": 1,
+		"tooltip-format": "DND"
+	},
+
+	"custom/util_hyprpicker": {
+		"format": "",
+		"on-click": "hyprpicker --no-fractional --no-fancy --quiet --autocopy",
+		"tooltip-format": "color picker"
+	},
+
+	"group/left": {
+        	"orientation": "inherit",
+        	"drawer": {
+            		"transition-duration": 500,
+            		"transition-left-to-right": false
+        	},
+        	"modules": ["custom/menu_left","tray"]
+    	},
+
+	"group/playerctl": {
+        	"orientation": "inherit",
+        	"drawer": {
+            		"transition-duration": 300,
+            		"transition-left-to-right": false
+        	},
+        	"modules": ["custom/now_playing","custom/playerctl_prev","custom/playerctl_pause","custom/playerctl_next"]
+    	},
+
+	"group/right": {
+        	"orientation": "inherit",
+        	"drawer": {
+            		"transition-duration": 500,
+            		"transition-left-to-right": true
+        	},
+        	"modules": ["custom/menu_right","custom/hyprsunset_gamma","custom/hyprsunset","custom/util_hyprpicker","custom/util_dnd","custom/powermenu"]
+	}
+}
